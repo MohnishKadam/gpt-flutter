@@ -50,7 +50,8 @@ class ChatRepository extends GetxService {
       print('✅ Hive boxes initialized successfully');
     } catch (e) {
       print('❌ Error initializing Hive: $e');
-      rethrow;
+      // Don't rethrow, just log the error and continue
+      print('📱 App will continue without local storage');
     }
   }
 

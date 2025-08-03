@@ -58,8 +58,23 @@ void main() async {
   Get.put(GeminiService());
   Get.put(AuthService());
 
+  // Initialize Firebase first
+  try {
+    if (Firebase.apps.isEmpty) {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      print('✅ Firebase initialized successfully');
+    }
+  } catch (e) {
+    print('⚠️ Firebase initialization failed: $e');
+    print('📱 App will continue without Firebase features');
+  }
+
   // Initialize ChatRepository first (manages both local and remote data)
-  Get.put(ChatRepository());
+  final chatRepository = Get.put(ChatRepository());
+  // Wait for Hive initialization to complete
+  await Future.delayed(const Duration(milliseconds: 100));
 
   // Initialize StorageService (legacy, will be replaced by ChatRepository)
   Get.put(StorageService());

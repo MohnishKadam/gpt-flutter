@@ -15,15 +15,22 @@ class DrawerSearchController extends GetxController {
   void onInit() {
     super.onInit();
     print('🚀 DrawerSearchController initialized');
-    _chatRepository = Get.find<ChatRepository>();
 
-    // Listen to conversations stream for real-time updates
-    _chatRepository.conversationsStream.listen((conversations) {
-      print('🔄 Received ${conversations.length} conversations from stream');
-      setChats(conversations);
-    });
+    try {
+      _chatRepository = Get.find<ChatRepository>();
 
-    loadChats();
+      // Listen to conversations stream for real-time updates
+      _chatRepository.conversationsStream.listen((conversations) {
+        print('🔄 Received ${conversations.length} conversations from stream');
+        setChats(conversations);
+      });
+
+      loadChats();
+    } catch (e) {
+      print('❌ Error initializing ChatRepository in drawer: $e');
+      // Set empty chats to prevent crash
+      setChats([]);
+    }
   }
 
   void toggleDrawer() {
@@ -69,6 +76,14 @@ class DrawerSearchController extends GetxController {
   Future<void> loadChats() async {
     try {
       print('🔄 Loading chats...');
+
+      // Check if ChatRepository is available
+      if (!Get.isRegistered<ChatRepository>()) {
+        print('⚠️ ChatRepository not available, setting empty chats');
+        setChats([]);
+        return;
+      }
+
       final conversations = await _chatRepository.loadConversations();
       print('📱 Loaded ${conversations.length} conversations');
 
