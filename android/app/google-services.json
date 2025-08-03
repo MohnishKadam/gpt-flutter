@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "298738451889",
+    "project_id": "chatgpt-flutter-app",
+    "storage_bucket": "chatgpt-flutter-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298738451889:android:31f53e99a0634f56576990",
+        "android_client_info": {
+          "package_name": "com.example.chatgpt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAA2e2YqImUHWguBswSH-Ome6olnZS7ygg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
