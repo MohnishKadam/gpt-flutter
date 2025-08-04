@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-var controller = Get.put(HomeController());
+var controller = Get.find<HomeController>();
 var screenWidth = Get.context!.width;
 double iconSize = screenWidth * 0.07;
 
@@ -111,204 +111,139 @@ Widget bottomWidget(BuildContext context,
   }
 
   return Obx(
-    () => Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Image previews
-
-        // Message input field
-        Container(
-          padding: const EdgeInsets.all(16.0),
-          decoration: BoxDecoration(
-            color: themeController.isDarkMode.value
-                ? darkmodebackground
-                : lightmodebackground,
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // New circular button design
-              GestureDetector(
-                onTap: () {
-                  // Show options menu or perform action
-                  showOptionsMenu(context, pickImage);
-                },
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  decoration: BoxDecoration(
-                    color: themeController.isDarkMode.value
-                        ? Colors.black87
-                        : Colors.grey[300],
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.add,
-                      color: themeController.isDarkMode.value
-                          ? Colors.white
-                          : Colors.black,
-                      size: 28,
-                    ),
-                  ),
+    () => Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Row(
+        children: [
+          // Left Attachment Button (+)
+          GestureDetector(
+            onTap: () {
+              showOptionsMenu(context, pickImage);
+            },
+            child: Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: themeController.isDarkMode.value
+                    ? Colors.grey[850]
+                    : Colors.grey[300],
+                shape: BoxShape.circle,
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.add,
+                  color: themeController.isDarkMode.value
+                      ? Colors.white
+                      : Colors.black,
+                  size: 24,
                 ),
               ),
-              SizedBox(width: screenWidth * 0.02),
-              // Resizable text field
-              Expanded(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: controller.selectedImages.isNotEmpty ? 250 : 100,
+            ),
+          ),
+
+          const SizedBox(width: 12),
+
+          // Center Text Field Container
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: themeController.isDarkMode.value
+                    ? Colors.grey[850]
+                    : Colors.grey[200],
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: TextField(
+                controller: localTextController,
+                style: TextStyle(
+                  color: themeController.isDarkMode.value
+                      ? Colors.white
+                      : Colors.black,
+                  fontSize: 16,
+                ),
+                decoration: InputDecoration(
+                  hintText: "Ask anything",
+                  hintStyle: TextStyle(
+                    color: themeController.isDarkMode.value
+                        ? Colors.grey[400]
+                        : Colors.grey[600],
+                    fontSize: 16,
                   ),
-                  child: SingleChildScrollView(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(25),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 16,
+                  ),
+                  suffixIcon: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Microphone Icon
+                      IconButton(
+                        onPressed: () {
+                          // Voice recording functionality
+                          print('🎤 Voice recording pressed');
+                        },
+                        icon: Icon(
+                          Icons.mic_rounded,
+                          color: themeController.isDarkMode.value
+                              ? Colors.grey[400]
+                              : Colors.grey[600],
+                          size: 24,
+                        ),
                       ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (controller.selectedImages.isNotEmpty)
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SizedBox(
-                                height: 90,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: controller.selectedImages.length,
-                                  itemBuilder: (context, index) {
-                                    final imageFile =
-                                        controller.selectedImages[index];
-                                    return Stack(
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 8.0),
-                                          child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            child: Image.file(
-                                              imageFile,
-                                              width: 80,
-                                              height: 80,
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          top: 0,
-                                          right: 0,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              controller.selectedImages
-                                                  .removeAt(index);
-                                            },
-                                            child: CircleAvatar(
-                                              radius: 10,
-                                              backgroundColor: themeController
-                                                      .isDarkMode.value
-                                                  ? darkmodetext
-                                                  : Colors.black,
-                                              child: Icon(Icons.close,
-                                                  color: themeController
-                                                          .isDarkMode.value
-                                                      ? Colors.black
-                                                      : Colors.white,
-                                                  size: 16),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                ),
-                              ),
-                            ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: TextField(
-                              style: TextStyle(
-                                  color: themeController.isDarkMode.value
-                                      ? darkmodetext
-                                      : Colors.black),
-                              controller: textController,
-                              onChanged: (value) {
-                                if (value.isNotEmpty &&
-                                    !controller.isExpanded.value) {
-                                  controller.isExpanded.value = true;
-                                }
-                              },
-                              decoration: InputDecoration(
-                                suffixIcon: Icon(Icons.mic_rounded,
-                                    color: themeController.isDarkMode.value
-                                        ? darkmodetext
-                                        : Colors.black),
-                                hintText: "Ask anything",
-                                hintStyle: TextStyle(
-                                    color: themeController.isDarkMode.value
-                                        ? darkmodetext
-                                        : Colors.black),
-                                filled: true,
-                                fillColor: Colors.grey.withOpacity(0),
-                                contentPadding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                  borderSide: BorderSide.none,
-                                ),
-                              ),
+                      const SizedBox(width: 8),
+                      // Send Button (Equalizer/Sound-wave icon)
+                      GestureDetector(
+                        onTap: () {
+                          if (localTextController.text.trim().isNotEmpty) {
+                            String text = localTextController.text.trim();
+                            print('🚀 Send button pressed with text: "$text"');
+                            onSubmit(text);
+                            localTextController.clear();
+                            controller.messageText.value = '';
+                          }
+                        },
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color:
+                                controller.messageText.value.trim().isNotEmpty
+                                    ? (themeController.isDarkMode.value
+                                        ? Colors.white
+                                        : Colors.black)
+                                    : Colors.grey[600],
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Icon(
+                              controller.messageText.value.trim().isNotEmpty
+                                  ? Icons
+                                      .arrow_upward_rounded // Upward arrow when text is present
+                                  : Icons
+                                      .graphic_eq_rounded, // Equalizer when empty
+                              color:
+                                  controller.messageText.value.trim().isNotEmpty
+                                      ? (themeController.isDarkMode.value
+                                          ? Colors.black
+                                          : Colors.white)
+                                      : Colors.grey[400],
+                              size: 20,
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                      const SizedBox(width: 12),
+                    ],
                   ),
                 ),
-              ),
-              SizedBox(width: screenWidth * 0.02),
-              GestureDetector(
-                onTap: () {
-                  if (controller.canSendMessage.value) {
-                    // Send message logic
-                    String text = localTextController.text.trim();
-                    if (text.isNotEmpty) {
-                      print('🚀 Send button pressed with text: "$text"');
-                      onSubmit(
-                          text); // Call the onSubmit function passed from main_screen
-
-                      // Reset states after sending
-                      localTextController.clear();
-                      controller.messageText.value = '';
-                      controller.isImageSelected.value = false;
-                    }
-                  } else {
-                    // Voice recording logic
-                    // Implement your voice recording functionality
-                  }
+                onChanged: (value) {
+                  controller.updateMessageText(value);
                 },
-                child: CircleAvatar(
-                  backgroundColor: themeController.isDarkMode.value
-                      ? darkmodetext
-                      : Colors.black,
-                  radius: 20,
-                  child: controller.canSendMessage.value
-                      ? Icon(Icons.arrow_upward_outlined,
-                          color: themeController.isDarkMode.value
-                              ? Colors.black
-                              : Colors.white) // Send icon
-                      : (themeController.isDarkMode.value
-                          ? Image.asset("assets/images/voice.png", height: 30)
-                          : Image.asset("assets/images/voice-white.png",
-                              height: 30)),
-                ),
               ),
-              SizedBox(width: screenWidth * 0.02),
-            ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }

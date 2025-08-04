@@ -8,6 +8,7 @@ class DrawerSearchController extends GetxController {
   final filteredChats = <Conversation>[].obs;
   final allChats = <Conversation>[].obs;
   final isSearchExpanded = false.obs;
+  final isLoading = false.obs;
 
   late ChatRepository _chatRepository;
 
@@ -22,7 +23,10 @@ class DrawerSearchController extends GetxController {
       // Listen to conversations stream for real-time updates
       _chatRepository.conversationsStream.listen((conversations) {
         print('🔄 Received ${conversations.length} conversations from stream');
-        setChats(conversations);
+        // Only update if the conversations have actually changed
+        if (!_areConversationsEqual(allChats.toList(), conversations)) {
+          setChats(conversations);
+        }
       });
 
       loadChats();
@@ -43,7 +47,10 @@ class DrawerSearchController extends GetxController {
 
   void openDrawer() {
     isDrawerOpen.value = true;
-    loadChats(); // Refresh chats when drawer opens
+    // Only load chats if they haven't been loaded yet
+    if (allChats.isEmpty) {
+      loadChats();
+    }
   }
 
   void updateSearchQuery(String query) {
@@ -74,7 +81,10 @@ class DrawerSearchController extends GetxController {
   }
 
   Future<void> loadChats() async {
+    if (isLoading.value) return; // Prevent multiple simultaneous loads
+
     try {
+      isLoading.value = true;
       print('🔄 Loading chats...');
 
       // Check if ChatRepository is available
@@ -105,13 +115,15 @@ class DrawerSearchController extends GetxController {
       print('❌ Error loading chats: $e');
       // Set empty list on error
       setChats([]);
+    } finally {
+      isLoading.value = false;
     }
   }
 
   Future<void> renameChat(String chatId, String newTitle) async {
     try {
       await _chatRepository.updateConversationTitle(chatId, newTitle);
-      await loadChats(); // Reload chats after rename
+      // Stream will automatically update the drawer
     } catch (e) {
       print('Error renaming chat: $e');
     }
@@ -120,7 +132,7 @@ class DrawerSearchController extends GetxController {
   Future<void> deleteChat(String chatId) async {
     try {
       await _chatRepository.deleteConversation(chatId);
-      await loadChats(); // Reload chats after delete
+      // Stream will automatically update the drawer
     } catch (e) {
       print('Error deleting chat: $e');
     }
@@ -128,6 +140,8 @@ class DrawerSearchController extends GetxController {
 
   // Force refresh chats
   Future<void> refreshChats() async {
+    if (isLoading.value) return; // Prevent multiple simultaneous refreshes
+
     print('🔄 Force refreshing chats...');
     try {
       await loadChats();
@@ -150,5 +164,25 @@ class DrawerSearchController extends GetxController {
   // Manual sync
   Future<void> syncData() async {
     await _chatRepository.syncData();
+  }
+
+  // Helper method to check if conversations are equal
+  bool _areConversationsEqual(
+      List<Conversation> list1, List<Conversation> list2) {
+    if (list1.length != list2.length) return false;
+
+    for (int i = 0; i < list1.length; i++) {
+      final conv1 = list1[i];
+      final conv2 = list2[i];
+
+      if (conv1.id != conv2.id ||
+          conv1.title != conv2.title ||
+          conv1.updatedAt != conv2.updatedAt ||
+          conv1.messages.length != conv2.messages.length) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }

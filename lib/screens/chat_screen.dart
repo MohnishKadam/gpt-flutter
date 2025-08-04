@@ -195,91 +195,92 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const CustomDrawer(),
-      resizeToAvoidBottomInset: true,
-      bottomNavigationBar: Padding(
-        padding:
-            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: bottomWidget(
-          context,
-          onSubmit: _handleSubmit,
-          textController: textController,
-        ),
-      ),
-      appBar: AppBar(
-        leading: Builder(
-          builder: (BuildContext context) {
-            return GestureDetector(
-                onTap: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                child: SizedBox(
-                    child: themeController.isDarkMode.value
-                        ? Image.asset("assets/images/drawer2.png")
-                        : Image.asset("assets/images/drawer2.jpg")));
-          },
-        ),
-        iconTheme: IconThemeData(
-            color:
-                themeController.isDarkMode.value ? darkmodetext : Colors.black),
-        backgroundColor: themeController.isDarkMode.value
-            ? darkmodebackground
-            : lightmodebackground,
-        title: Text(widget.chatTitle,
-            style: TextStyle(
-                color: themeController.isDarkMode.value
-                    ? darkmodetext
-                    : Colors.black)),
-        actions: [
-          GestureDetector(
-              onTap: () {
-                Get.to(() => MainScreen());
+    return Obx(() => Scaffold(
+          drawer: const CustomDrawer(),
+          resizeToAvoidBottomInset: true,
+          bottomNavigationBar: Padding(
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
+            child: bottomWidget(
+              context,
+              onSubmit: _handleSubmit,
+              textController: textController,
+            ),
+          ),
+          appBar: AppBar(
+            leading: Builder(
+              builder: (BuildContext context) {
+                return GestureDetector(
+                    onTap: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                    child: SizedBox(
+                        child: themeController.isDarkMode.value
+                            ? Image.asset("assets/images/drawer2.png")
+                            : Image.asset("assets/images/drawer2.jpg")));
               },
-              child: themeController.isDarkMode.value
-                  ? Image.asset(
-                      "assets/images/edit.png",
-                      opacity: const AlwaysStoppedAnimation(1),
-                      height: 20,
-                    )
-                  : Image.asset(
-                      "assets/images/edit_black.png",
-                      opacity: const AlwaysStoppedAnimation(1),
-                      height: 20,
-                    )),
-          IconButton(
-            icon: Icon(Icons.more_vert,
+            ),
+            iconTheme: IconThemeData(
                 color: themeController.isDarkMode.value
                     ? darkmodetext
                     : Colors.black),
-            onPressed: () {
-              showDialog(
-                context: context,
-                barrierColor: Colors.transparent,
-                builder: (context) => Stack(
-                  children: [
-                    GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Container(
-                        color: Colors.transparent,
-                      ),
+            backgroundColor: themeController.isDarkMode.value
+                ? darkmodebackground
+                : lightmodebackground,
+            title: Text(widget.chatTitle,
+                style: TextStyle(
+                    color: themeController.isDarkMode.value
+                        ? darkmodetext
+                        : Colors.black)),
+            actions: [
+              GestureDetector(
+                  onTap: () {
+                    Get.to(() => MainScreen());
+                  },
+                  child: themeController.isDarkMode.value
+                      ? Image.asset(
+                          "assets/images/edit.png",
+                          opacity: const AlwaysStoppedAnimation(1),
+                          height: 20,
+                        )
+                      : Image.asset(
+                          "assets/images/edit_black.png",
+                          opacity: const AlwaysStoppedAnimation(1),
+                          height: 20,
+                        )),
+              IconButton(
+                icon: Icon(Icons.more_vert,
+                    color: themeController.isDarkMode.value
+                        ? darkmodetext
+                        : Colors.black),
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    barrierColor: Colors.transparent,
+                    builder: (context) => Stack(
+                      children: [
+                        GestureDetector(
+                          onTap: () => Navigator.pop(context),
+                          child: Container(
+                            color: Colors.transparent,
+                          ),
+                        ),
+                        const Positioned(
+                          top: 0,
+                          right: 0,
+                          child: LoggerFileOptionsOverlay(),
+                        ),
+                      ],
                     ),
-                    const Positioned(
-                      top: 0,
-                      right: 0,
-                      child: LoggerFileOptionsOverlay(),
-                    ),
-                  ],
-                ),
-              );
-            },
+                  );
+                },
+              ),
+            ],
           ),
-        ],
-      ),
-      backgroundColor: themeController.isDarkMode.value
-          ? darkmodebackground
-          : lightmodebackground,
-      body: ChatMessageList(messages: messages),
-    );
+          backgroundColor: themeController.isDarkMode.value
+              ? darkmodebackground
+              : lightmodebackground,
+          body: ChatMessageList(messages: messages),
+        ));
   }
 }

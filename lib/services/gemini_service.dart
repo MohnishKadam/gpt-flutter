@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
 import '../models/message.dart';
 import '../models/ai_model.dart';
+import '../controllers/model_controller.dart';
 
 class GeminiService {
   static const String _baseUrl =
@@ -15,6 +17,17 @@ class GeminiService {
 
   final http.Client _client = http.Client();
 
+  // Get the current model from the controller
+  AIModel get currentModel {
+    try {
+      final modelController = Get.find<ModelController>();
+      return modelController.selectedModel;
+    } catch (e) {
+      print('⚠️ ModelController not found, using default model');
+      return AIModel.gemini15Flash;
+    }
+  }
+
   // Rate limiting: Track the last request time to avoid hitting 60 requests/minute limit
   static DateTime? _lastRequestTime;
   static const Duration _minRequestInterval =
@@ -23,6 +36,24 @@ class GeminiService {
   // Track request count for better rate limiting
   static int _requestCount = 0;
   static DateTime? _resetTime;
+
+  /// Generate AI response using the currently selected model
+  Future<String> generateResponse(
+      String prompt, List<Message> conversationHistory) async {
+    try {
+      final messages = [
+        ...conversationHistory,
+        Message(content: prompt, role: MessageRole.user),
+      ];
+
+      final response =
+          await chatCompletion(messages: messages, model: currentModel);
+      return response;
+    } catch (e) {
+      print('❌ Error generating response: $e');
+      rethrow;
+    }
+  }
 
   /// Enhanced rate limiter to ensure we don't exceed Gemini's free tier limit
   /// This adds a 2 second delay between requests and tracks request count

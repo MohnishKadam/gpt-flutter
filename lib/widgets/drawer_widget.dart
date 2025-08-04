@@ -7,6 +7,7 @@ import 'package:chatgpt/controllers/chat_controller.dart';
 import 'package:chatgpt/models/conversation.dart';
 import 'package:chatgpt/screens/main_screen.dart';
 import 'package:chatgpt/screens/settings_screen.dart';
+import 'package:chatgpt/screens/model_selection_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -278,10 +279,12 @@ class CustomDrawer extends StatelessWidget {
     final DrawerSearchController controller =
         Get.find<DrawerSearchController>();
 
-    // Refresh chats when drawer is built
+    // Load chats only once when drawer is first built
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print('🔄 Drawer built, refreshing chats...');
-      controller.refreshChats();
+      if (controller.allChats.isEmpty && !controller.isLoading.value) {
+        print('🔄 Drawer built, loading chats for the first time...');
+        controller.loadChats();
+      }
     });
 
     return Obx(() {
@@ -455,7 +458,10 @@ class CustomDrawer extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.pop(context); // Close drawer
+                      Get.to(() => const ModelSelectionScreen());
+                    },
                   ),
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.0),

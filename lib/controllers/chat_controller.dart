@@ -3,7 +3,6 @@ import 'package:chatgpt/models/ai_model.dart';
 import 'package:chatgpt/models/conversation.dart';
 import 'package:chatgpt/services/gemini_service.dart';
 import 'package:chatgpt/services/chat_repository.dart';
-import 'package:chatgpt/controllers/drawer_search_controller.dart';
 import 'package:get/get.dart';
 
 class ChatController extends GetxController {
@@ -19,8 +18,8 @@ class ChatController extends GetxController {
     super.onInit();
     // Listen to conversations stream for real-time updates
     _chatRepository.conversationsStream.listen((conversations) {
-      // Update drawer when conversations change
-      _refreshDrawer();
+      // Stream automatically updates the drawer
+      print('🔄 Received conversation updates from stream');
     });
   }
 
@@ -63,8 +62,7 @@ class ChatController extends GetxController {
       print('💾 Saving conversation after message exchange...');
       await _saveCurrentConversation();
 
-      // Force refresh the drawer to show the new conversation
-      await _refreshDrawer();
+      // Stream will automatically update the drawer
     } catch (e) {
       String errorMessage = 'Sorry, I encountered an error. Please try again.';
 
@@ -191,26 +189,6 @@ class ChatController extends GetxController {
       startNewConversation();
     } catch (e) {
       print('Error deleting conversation: $e');
-    }
-  }
-
-  // Refresh drawer to show updated chat history
-  Future<void> _refreshDrawer() async {
-    try {
-      final drawerController = Get.find<DrawerSearchController>();
-      print('🔄 Refreshing drawer chats...');
-      await drawerController.refreshChats();
-      print('✅ Drawer refreshed successfully');
-    } catch (e) {
-      print('⚠️ Could not refresh drawer: $e');
-      // Try to find the controller again
-      try {
-        final drawerController = Get.put(DrawerSearchController());
-        await drawerController.refreshChats();
-        print('✅ Drawer refreshed on second attempt');
-      } catch (e2) {
-        print('❌ Failed to refresh drawer on second attempt: $e2');
-      }
     }
   }
 

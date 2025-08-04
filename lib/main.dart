@@ -1,6 +1,8 @@
 import 'package:chatgpt/controllers/theme_controller.dart';
 import 'package:chatgpt/controllers/chat_controller.dart';
 import 'package:chatgpt/controllers/drawer_search_controller.dart';
+import 'package:chatgpt/controllers/model_controller.dart';
+import 'package:chatgpt/controllers/home_controller.dart';
 import 'package:chatgpt/screens/main_screen.dart';
 import 'package:chatgpt/services/firebase_service.dart';
 import 'package:chatgpt/services/gemini_service.dart';
@@ -57,19 +59,8 @@ void main() async {
   Get.put(ThemeController());
   Get.put(GeminiService());
   Get.put(AuthService());
-
-  // Initialize Firebase first
-  try {
-    if (Firebase.apps.isEmpty) {
-      await Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform,
-      );
-      print('✅ Firebase initialized successfully');
-    }
-  } catch (e) {
-    print('⚠️ Firebase initialization failed: $e');
-    print('📱 App will continue without Firebase features');
-  }
+  Get.put(ModelController());
+  Get.put(HomeController());
 
   // Initialize ChatRepository first (manages both local and remote data)
   final chatRepository = Get.put(ChatRepository());

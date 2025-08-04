@@ -11,50 +11,52 @@ class CustomizesScreen extends StatelessWidget {
     // Access the ThemeController
     final ThemeController themeController = Get.find();
 
-    return Scaffold(
-      backgroundColor: themeController.isDarkMode.value
-          ? darkmodebackground
-          : lightmodebackground,
-      appBar: AppBar(
-        backgroundColor: themeController.isDarkMode.value
-            ? darkmodebackground
-            : lightmodebackground,
-        title: Text(
-          'Customize',
-          style: TextStyle(
+    return Obx(() => Scaffold(
+          backgroundColor: themeController.isDarkMode.value
+              ? darkmodebackground
+              : lightmodebackground,
+          appBar: AppBar(
+            backgroundColor: themeController.isDarkMode.value
+                ? darkmodebackground
+                : lightmodebackground,
+            title: Text(
+              'Customize',
+              style: TextStyle(
+                  color: themeController.isDarkMode.value
+                      ? Colors.white
+                      : Colors.black),
+            ),
+            leading: BackButton(
               color: themeController.isDarkMode.value
                   ? Colors.white
-                  : Colors.black),
-        ),
-        leading: BackButton(
-          color: themeController.isDarkMode.value ? Colors.white : Colors.black,
-        ),
-      ),
-      body: ListView(
-        children: [
-          GestureDetector(
-            onTap: () {
-              _showThemeDialog(context, themeController);
-            },
-            child: ListTile(
-              leading: Icon(
-                Icons.tune,
-                color: themeController.isDarkMode.value
-                    ? Colors.white
-                    : Colors.black,
-              ),
-              title: Text(
-                'Color Scheme',
-                style: TextStyle(
-                    color: themeController.isDarkMode.value
-                        ? Colors.white
-                        : Colors.black),
-              ),
+                  : Colors.black,
             ),
           ),
-        ],
-      ),
-    );
+          body: ListView(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  _showThemeDialog(context, themeController);
+                },
+                child: ListTile(
+                  leading: Icon(
+                    Icons.tune,
+                    color: themeController.isDarkMode.value
+                        ? Colors.white
+                        : Colors.black,
+                  ),
+                  title: Text(
+                    'Color Scheme',
+                    style: TextStyle(
+                        color: themeController.isDarkMode.value
+                            ? Colors.white
+                            : Colors.black),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ));
   }
 
   // Show Dialog Box for Theme Options

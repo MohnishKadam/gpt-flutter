@@ -485,9 +485,17 @@ class ChatRepository extends GetxService {
   }
 
   void _notifyConversationsChanged() {
-    final conversations = _conversationsBox.values.toList();
-    conversations.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
-    _conversationsController.add(conversations);
+    try {
+      final conversations = _conversationsBox.values.toList();
+      conversations.sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+
+      // Only emit if there are listeners to avoid unnecessary processing
+      if (_conversationsController.hasListener) {
+        _conversationsController.add(conversations);
+      }
+    } catch (e) {
+      print('❌ Error notifying conversations changed: $e');
+    }
   }
 
   // Manual sync method
