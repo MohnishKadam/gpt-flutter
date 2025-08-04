@@ -218,29 +218,31 @@ class MainScreen extends StatelessWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(0.4),
-                        borderRadius: BorderRadius.circular(8)),
+                      gradient: const LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color(0xFF6366F1), // Deep purple/indigo
+                          Color(0xFF8B5CF6), // Lighter purple
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                     child: Align(
                       alignment: Alignment.center,
                       child: Row(
                         children: [
                           Text('Get Plus',
-                              style: TextStyle(
-                                  color: themeController.isDarkMode.value
-                                      ? darkmodetext
-                                      : Colors.purple)),
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600)),
                           const SizedBox(
                             width: 5,
                           ),
-                          themeController.isDarkMode.value
-                              ? const Image(
-                                  image: AssetImage("assets/images/star1.png"),
-                                  height: 15,
-                                )
-                              : Image.asset(
-                                  "assets/images/star2.png",
-                                  height: 15,
-                                )
+                          const Image(
+                            image: AssetImage("assets/images/star1.png"),
+                            height: 15,
+                          ),
                         ],
                       ),
                     ),
@@ -261,182 +263,60 @@ class MainScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(2.0),
                   child: Column(children: [
                     Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Top bar
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                      child: Column(
+                        children: [
+                          // Top bar
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: screenWidth * 0.18,
+                              ),
+                              SizedBox(
+                                width: screenWidth * 0.07,
+                              ),
+                              SizedBox(
+                                width: screenWidth * 0.06,
+                              ),
+                            ],
+                          ),
+
+                          // Empty space to push buttons to bottom
+                          const Spacer(),
+
+                          // Horizontal suggestion buttons at bottom
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            child: Row(
                               children: [
-                                SizedBox(
-                                  width: screenWidth * 0.18,
-                                ),
-                                SizedBox(
-                                  width: screenWidth * 0.07,
-                                ),
-                                SizedBox(
-                                  width: screenWidth * 0.06,
-                                ),
-                              ],
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Obx(
-                                  () => AnimatedContainer(
-                                    duration: const Duration(milliseconds: 200),
-                                    curve: Curves.easeInOutQuart,
-                                    height: (controller.showHiddenButtons.value)
-                                        ? 130
-                                        : 150,
+                                // First suggestion button
+                                Expanded(
+                                  child: buildActionButton(
+                                    'Create an illustration',
+                                    description: 'for a bakery',
+                                    onPressed: () => _handleActionButton(
+                                      'Create an illustration for a bakery. Please help me design a beautiful illustration that captures the warm, inviting atmosphere of a bakery with fresh bread, pastries, and cozy elements.',
+                                    ),
                                   ),
                                 ),
-                                Text(
-                                  '',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: themeController.isDarkMode.value
-                                        ? darkmodetext
-                                        : Colors.black,
-                                    fontSize: screenWidth * 0.06,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                const SizedBox(height: 20),
-                                Obx(
-                                  () => AnimatedOpacity(
-                                    opacity:
-                                        controller.initialButtonsVisible.value
-                                            ? 1.0
-                                            : 0.0,
-                                    duration: const Duration(milliseconds: 800),
-                                    child: Wrap(
-                                      alignment: WrapAlignment.center,
-                                      spacing: 16,
-                                      runSpacing: 16,
-                                      children: [
-                                        buildActionButton('Create image',
-                                            description:
-                                                'Generate AI images from text descriptions',
-                                            onPressed: () => _handleActionButton(
-                                                'Create an AI-generated image based on a detailed description. What kind of image would you like me to help you create?')),
-                                        buildActionButton('Brainstorm',
-                                            description:
-                                                'Get creative ideas and inspiration',
-                                            onPressed: () => _handleActionButton(
-                                                'I need help brainstorming creative ideas. Can you help me generate some innovative concepts and inspiration?')),
-                                        buildActionButton('Make a plan',
-                                            description:
-                                                'Create structured plans and outlines',
-                                            onPressed: () => _handleActionButton(
-                                                'I need help creating a structured plan. Can you help me organize my thoughts and create a detailed outline?')),
-                                        Obx(
-                                          () => Visibility(
-                                            visible: !controller
-                                                .showHiddenButtons.value,
-                                            child: buildActionButton('More',
-                                                description:
-                                                    'Show additional options',
-                                                onPressed: () {
-                                              controller.showHiddenButtons
-                                                  .value = true;
-                                            }),
-                                          ),
-                                        ),
-                                        Obx(
-                                          () => AnimatedContainer(
-                                            duration: const Duration(
-                                                milliseconds: 800),
-                                            curve: Curves.easeInOutQuart,
-                                            height: controller
-                                                    .showHiddenButtons.value
-                                                ? controller
-                                                    .calculateContainerHeight() // Dynamic height calculation
-                                                : 0,
-                                            width: double.infinity,
-                                            clipBehavior: Clip.antiAlias,
-                                            decoration: const BoxDecoration(
-                                              color: Colors.transparent,
-                                            ),
-                                            child: SingleChildScrollView(
-                                              child: Visibility(
-                                                visible: controller
-                                                    .showHiddenButtons.value,
-                                                child: Column(
-                                                  children: [
-                                                    Wrap(
-                                                      alignment:
-                                                          WrapAlignment.center,
-                                                      spacing: 16,
-                                                      runSpacing: 16,
-                                                      children: [
-                                                        buildActionButton(
-                                                            'Get advice',
-                                                            description:
-                                                                'Receive guidance and recommendations',
-                                                            onPressed: () =>
-                                                                _handleActionButton(
-                                                                    'I need advice and guidance. Can you provide me with helpful recommendations and suggestions?')),
-                                                        buildActionButton(
-                                                            'Summarise text',
-                                                            description:
-                                                                'Create concise summaries from long content',
-                                                            onPressed: () =>
-                                                                _handleActionButton(
-                                                                    'I need help summarizing text content. Can you help me create concise summaries from long documents or articles?')),
-                                                        buildActionButton(
-                                                            'Surprise me',
-                                                            description:
-                                                                'Get random interesting prompts',
-                                                            onPressed: () =>
-                                                                _handleActionButton(
-                                                                    'Surprise me with an interesting and creative prompt or idea that I can explore!')),
-                                                        buildActionButton(
-                                                            'Analyze image',
-                                                            description:
-                                                                'Understand and describe image content',
-                                                            onPressed: () =>
-                                                                _handleActionButton(
-                                                                    'I need help analyzing and understanding image content. Can you help me describe and interpret images?')),
-                                                        buildActionButton(
-                                                            'Code',
-                                                            description:
-                                                                'Programming help and code generation',
-                                                            onPressed: () =>
-                                                                _handleActionButton(
-                                                                    'I need help with programming and code generation. Can you assist me with coding tasks and technical solutions?')),
-                                                        buildActionButton(
-                                                            'Analyze data',
-                                                            description:
-                                                                'Extract insights from datasets',
-                                                            onPressed: () =>
-                                                                _handleActionButton(
-                                                                    'I need help analyzing data and extracting insights from datasets. Can you help me understand and interpret data?')),
-                                                        buildActionButton(
-                                                            'Help me write',
-                                                            description:
-                                                                'Assist with writing and editing',
-                                                            onPressed: () =>
-                                                                _handleActionButton(
-                                                                    'I need help with writing and editing. Can you assist me with improving my writing skills and content creation?')),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                const SizedBox(width: 12),
+                                // Second suggestion button
+                                Expanded(
+                                  child: buildActionButton(
+                                    'Help me understand',
+                                    description: 'a technical document',
+                                    onPressed: () => _handleActionButton(
+                                      'Help me understand a technical document. I have a complex technical document that I need help comprehending. Can you break it down and explain the key concepts in simple terms?',
                                     ),
                                   ),
                                 ),
                               ],
                             ),
-                            SizedBox(height: screenHeight * 0.15),
-                          ],
-                        ),
+                          ),
+
+                          const SizedBox(height: 20),
+                        ],
                       ),
                     ),
                     bottomWidget(context,
