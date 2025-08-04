@@ -285,35 +285,35 @@ class MainScreen extends StatelessWidget {
                           const Spacer(),
 
                           // Horizontal suggestion buttons at bottom
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
-                            child: Row(
-                              children: [
-                                // First suggestion button
-                                Expanded(
-                                  child: buildActionButton(
-                                    'Create an illustration',
-                                    description: 'for a bakery',
-                                    onPressed: () => _handleActionButton(
-                                      'Create an illustration for a bakery. Please help me design a beautiful illustration that captures the warm, inviting atmosphere of a bakery with fresh bread, pastries, and cozy elements.',
+                          Obx(() => Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0),
+                                child: Row(
+                                  children: [
+                                    // First suggestion button
+                                    Expanded(
+                                      child: buildActionButton(
+                                        'Create an illustration',
+                                        description: 'for a bakery',
+                                        onPressed: () => _handleActionButton(
+                                          'Create an illustration for a bakery. Please help me design a beautiful illustration that captures the warm, inviting atmosphere of a bakery with fresh bread, pastries, and cozy elements.',
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                                // Second suggestion button
-                                Expanded(
-                                  child: buildActionButton(
-                                    'Help me understand',
-                                    description: 'a technical document',
-                                    onPressed: () => _handleActionButton(
-                                      'Help me understand a technical document. I have a complex technical document that I need help comprehending. Can you break it down and explain the key concepts in simple terms?',
+                                    const SizedBox(width: 12),
+                                    // Second suggestion button
+                                    Expanded(
+                                      child: buildActionButton(
+                                        'Help me understand',
+                                        description: 'a technical document',
+                                        onPressed: () => _handleActionButton(
+                                          'Help me understand a technical document. I have a complex technical document that I need help comprehending. Can you break it down and explain the key concepts in simple terms?',
+                                        ),
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
+                              )),
 
                           const SizedBox(height: 20),
                         ],

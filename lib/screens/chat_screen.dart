@@ -227,27 +227,12 @@ class _ChatScreenState extends State<ChatScreen> {
             backgroundColor: themeController.isDarkMode.value
                 ? darkmodebackground
                 : lightmodebackground,
-            title: Text(widget.chatTitle,
+            title: Text('ChatGPT',
                 style: TextStyle(
                     color: themeController.isDarkMode.value
                         ? darkmodetext
                         : Colors.black)),
             actions: [
-              GestureDetector(
-                  onTap: () {
-                    Get.to(() => MainScreen());
-                  },
-                  child: themeController.isDarkMode.value
-                      ? Image.asset(
-                          "assets/images/edit.png",
-                          opacity: const AlwaysStoppedAnimation(1),
-                          height: 20,
-                        )
-                      : Image.asset(
-                          "assets/images/edit_black.png",
-                          opacity: const AlwaysStoppedAnimation(1),
-                          height: 20,
-                        )),
               IconButton(
                 icon: Icon(Icons.more_vert,
                     color: themeController.isDarkMode.value
